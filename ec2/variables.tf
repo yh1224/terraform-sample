@@ -14,7 +14,6 @@ variable "aws_profile" {
 
 variable "service" {
   description = "Service name"
-  default     = "test"
 }
 
 variable "env" {
