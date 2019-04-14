@@ -20,3 +20,7 @@ variable "env" {
   description = "Environment name"
   default     = "development"
 }
+
+variable "bucket_name" {
+  description = "Bucket name"
+}

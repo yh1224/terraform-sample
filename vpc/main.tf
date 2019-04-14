@@ -20,9 +20,10 @@ resource "aws_vpc" "vpc" {
   enable_dns_hostnames = true
 
   tags {
-    Name    = "${var.service}-vpc"
-    Service = "${var.service}"
-    Env     = "${var.env}"
+    Name      = "${var.service}-vpc"
+    Service   = "${var.service}"
+    Env       = "${var.env}"
+    CreatedBy = "${var.created_by}"
   }
 }
 
@@ -31,9 +32,10 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = "${aws_vpc.vpc.id}"
 
   tags {
-    Name    = "${var.service}-igw"
-    Service = "${var.service}"
-    Env     = "${var.env}"
+    Name      = "${var.service}-igw"
+    Service   = "${var.service}"
+    Env       = "${var.env}"
+    CreatedBy = "${var.created_by}"
   }
 }
 
@@ -42,9 +44,10 @@ resource "aws_default_route_table" "rt_default" {
   default_route_table_id = "${aws_vpc.vpc.main_route_table_id}"
 
   tags {
-    Name    = "${var.service}-rt-default"
-    Service = "${var.service}"
-    Env     = "${var.env}"
+    Name      = "${var.service}-rt-default"
+    Service   = "${var.service}"
+    Env       = "${var.env}"
+    CreatedBy = "${var.created_by}"
   }
 }
 
@@ -52,9 +55,10 @@ resource "aws_route_table" "rt_public" {
   vpc_id = "${aws_vpc.vpc.id}"
 
   tags {
-    Name    = "${var.service}-rt-public"
-    Service = "${var.service}"
-    Env     = "${var.env}"
+    Name      = "${var.service}-rt-public"
+    Service   = "${var.service}"
+    Env       = "${var.env}"
+    CreatedBy = "${var.created_by}"
   }
 }
 
@@ -73,9 +77,10 @@ resource "aws_subnet" "subnet_public_a" {
   map_public_ip_on_launch = true
 
   tags {
-    Name    = "${var.service}-subnet-public-a"
-    Service = "${var.service}"
-    Env     = "${var.env}"
+    Name      = "${var.service}-subnet-public-a"
+    Service   = "${var.service}"
+    Env       = "${var.env}"
+    CreatedBy = "${var.created_by}"
   }
 }
 
@@ -91,9 +96,10 @@ resource "aws_subnet" "subnet_public_c" {
   map_public_ip_on_launch = true
 
   tags {
-    Name    = "${var.service}-subnet-public-c"
-    Service = "${var.service}"
-    Env     = "${var.env}"
+    Name      = "${var.service}-subnet-public-c"
+    Service   = "${var.service}"
+    Env       = "${var.env}"
+    CreatedBy = "${var.created_by}"
   }
 }
 
@@ -109,9 +115,10 @@ resource "aws_subnet" "subnet_public_d" {
   map_public_ip_on_launch = true
 
   tags {
-    Name    = "${var.service}-subnet-public-d"
-    Service = "${var.service}"
-    Env     = "${var.env}"
+    CreatedBy = "${var.created_by}"
+    Name      = "${var.service}-subnet-public-d"
+    Service   = "${var.service}"
+    Env       = "${var.env}"
   }
 }
 
@@ -127,9 +134,10 @@ resource "aws_subnet" "subnet_private_a" {
   map_public_ip_on_launch = true
 
   tags {
-    Name    = "${var.service}-subnet-private-a"
-    Service = "${var.service}"
-    Env     = "${var.env}"
+    Name      = "${var.service}-subnet-private-a"
+    Service   = "${var.service}"
+    Env       = "${var.env}"
+    CreatedBy = "${var.created_by}"
   }
 }
 
@@ -140,9 +148,10 @@ resource "aws_subnet" "subnet_private_c" {
   map_public_ip_on_launch = true
 
   tags {
-    Name    = "${var.service}-subnet-private-c"
-    Service = "${var.service}"
-    Env     = "${var.env}"
+    Name      = "${var.service}-subnet-private-c"
+    Service   = "${var.service}"
+    Env       = "${var.env}"
+    CreatedBy = "${var.created_by}"
   }
 }
 
@@ -153,8 +162,9 @@ resource "aws_subnet" "subnet_private_d" {
   map_public_ip_on_launch = true
 
   tags {
-    Name    = "${var.service}-subnet-private-d"
-    Service = "${var.service}"
-    Env     = "${var.env}"
+    Name      = "${var.service}-subnet-private-d"
+    Service   = "${var.service}"
+    Env       = "${var.env}"
+    CreatedBy = "${var.created_by}"
   }
 }
