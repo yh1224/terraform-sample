@@ -10,8 +10,8 @@ terraform {
 
 # Specify the provider and access details
 provider "aws" {
-  region  = "${var.aws_region}"
-  profile = "${var.aws_profile}"
+  region  = var.aws_region
+  profile = var.aws_profile
 }
 
 # IAM Role (EC2)
@@ -36,20 +36,20 @@ EOF
 
   tags = {
     Name      = "${var.service}-role-ec2"
-    Service   = "${var.service}"
-    Env       = "${var.env}"
-    CreatedBy = "${var.created_by}"
+    Service   = var.service
+    Env       = var.env
+    CreatedBy = var.created_by
   }
 }
 
 resource "aws_iam_role_policy_attachment" "role_policy_attach_ec2" {
-  role       = "${aws_iam_role.role_ec2.name}"
+  role       = aws_iam_role.role_ec2.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 
 resource "aws_iam_role_policy" "role_policy_ec2" {
   name = "${var.service}-role-policy-ec2"
-  role = "${aws_iam_role.role_ec2.id}"
+  role = aws_iam_role.role_ec2.id
 
   policy = <<EOF
 {
@@ -73,13 +73,13 @@ EOF
 resource "aws_security_group" "sg_ec2" {
   name        = "${var.service}-sg-ec2"
   description = "EC2"
-  vpc_id      = "${aws_vpc.vpc.id}"
+  vpc_id      = aws_vpc.vpc.id
 
   tags = {
     Name      = "${var.service}-ec2"
-    Service   = "${var.service}"
-    Env       = "${var.env}"
-    CreatedBy = "${var.created_by}"
+    Service   = var.service
+    Env       = var.env
+    CreatedBy = var.created_by
   }
 
   # SSH
@@ -102,7 +102,7 @@ resource "aws_security_group" "sg_ec2" {
     from_port       = 80
     to_port         = 80
     protocol        = "tcp"
-    security_groups = ["${aws_security_group.sg_lb.id}"]
+    security_groups = [aws_security_group.sg_lb.id]
     description     = "Load Balancer"
   }
 
@@ -144,13 +144,13 @@ resource "aws_security_group" "sg_ec2" {
 resource "aws_security_group" "sg_lb" {
   name        = "${var.service}-sg-lb"
   description = "Load Balancer"
-  vpc_id      = "${aws_vpc.vpc.id}"
+  vpc_id      = aws_vpc.vpc.id
 
   tags = {
     Name      = "${var.service}-lb"
-    Service   = "${var.service}"
-    Env       = "${var.env}"
-    CreatedBy = "${var.created_by}"
+    Service   = var.service
+    Env       = var.env
+    CreatedBy = var.created_by
   }
 
   # HTTP (test)
@@ -201,31 +201,31 @@ resource "aws_security_group" "sg_lb" {
 
 # Key pair
 resource "aws_key_pair" "keypair" {
-  key_name   = "${var.key_name}"
-  public_key = "${file(var.public_key_path)}"
+  key_name   = var.key_name
+  public_key = file(var.public_key_path)
 }
 
 # EC2
 resource "aws_instance" "ec2" {
-  ami                    = "${var.ec2_ami}"
-  instance_type          = "${var.ec2_instance_type}"
-  key_name               = "${var.key_name}"
+  ami                    = var.ec2_ami
+  instance_type          = var.ec2_instance_type
+  key_name               = var.key_name
   availability_zone      = "ap-northeast-1a"
-  subnet_id              = "${aws_subnet.subnet_public_a.id}"
-  vpc_security_group_ids = ["${aws_security_group.sg_ec2.id}"]
+  subnet_id              = aws_subnet.subnet_public_a.id
+  vpc_security_group_ids = [aws_security_group.sg_ec2.id]
 
   tags = {
     Name      = "${var.service}-ec2"
-    Service   = "${var.service}"
-    Env       = "${var.env}"
-    CreatedBy = "${var.created_by}"
+    Service   = var.service
+    Env       = var.env
+    CreatedBy = var.created_by
   }
 }
 
 # Load Balancing
 resource "aws_iam_instance_profile" "iam_profile_ec2" {
   name = "${var.service}-iam-profile-ec2"
-  role = "${aws_iam_role.role_ec2.name}"
+  role = aws_iam_role.role_ec2.name
 }
 
 #resource "aws_launch_configuration" "lc" {
@@ -241,7 +241,7 @@ resource "aws_lb_target_group" "tg" {
   name     = "${var.service}-tg"
   port     = 80
   protocol = "HTTP"
-  vpc_id   = "${aws_vpc.vpc.id}"
+  vpc_id   = aws_vpc.vpc.id
 
   health_check {
     protocol            = "HTTP"
@@ -256,9 +256,9 @@ resource "aws_lb_target_group" "tg" {
 
   tags = {
     Name      = "${var.service}-tg"
-    Service   = "${var.service}"
-    Env       = "${var.env}"
-    CreatedBy = "${var.created_by}"
+    Service   = var.service
+    Env       = var.env
+    CreatedBy = var.created_by
   }
 }
 
@@ -301,29 +301,29 @@ resource "aws_lb_target_group" "tg" {
 
 resource "aws_lb" "lb" {
   name            = "${var.service}-lb"
-  security_groups = ["${aws_security_group.sg_lb.id}"]
+  security_groups = [aws_security_group.sg_lb.id]
 
   subnets = [
-    "${aws_subnet.subnet_public_a.id}",
-    "${aws_subnet.subnet_public_c.id}",
-    "${aws_subnet.subnet_public_d.id}",
+    aws_subnet.subnet_public_a.id,
+    aws_subnet.subnet_public_c.id,
+    aws_subnet.subnet_public_d.id,
   ]
 
   tags = {
     Name      = "${var.service}-lb"
-    Service   = "${var.service}"
-    Env       = "${var.env}"
-    CreatedBy = "${var.created_by}"
+    Service   = var.service
+    Env       = var.env
+    CreatedBy = var.created_by
   }
 }
 
 resource "aws_lb_listener" "lb_listener" {
-  load_balancer_arn = "${aws_lb.lb.arn}"
+  load_balancer_arn = aws_lb.lb.arn
   port              = "80"
   protocol          = "HTTP"
 
   default_action {
     type             = "forward"
-    target_group_arn = "${aws_lb_target_group.tg.arn}"
+    target_group_arn = aws_lb_target_group.tg.arn
   }
 }

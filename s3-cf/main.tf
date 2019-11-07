@@ -10,8 +10,8 @@ terraform {
 
 # Specify the provider and access details
 provider "aws" {
-  region  = "${var.aws_region}"
-  profile = "${var.aws_profile}"
+  region  = var.aws_region
+  profile = var.aws_profile
 }
 
 # Origin Access Identity (CloudFront to S3)
@@ -22,14 +22,14 @@ resource "aws_cloudfront_origin_access_identity" "oai" {
 # S3
 resource "aws_s3_bucket" "s3" {
   #provider = "aws.prod"
-  bucket = "${var.bucket_name}"
+  bucket = var.bucket_name
   acl    = "private"
 
   tags = {
     Name      = "${var.service}-s3"
-    Service   = "${var.service}"
-    Env       = "${var.env}"
-    CreatedBy = "${var.created_by}"
+    Service   = var.service
+    Env       = var.env
+    CreatedBy = var.created_by
   }
 
   cors_rule {
@@ -65,14 +65,14 @@ data "aws_iam_policy_document" "s3_policy" {
 
     principals {
       type        = "AWS"
-      identifiers = ["${aws_cloudfront_origin_access_identity.oai.iam_arn}"]
+      identifiers = [aws_cloudfront_origin_access_identity.oai.iam_arn]
     }
   }
 }
 
 resource "aws_s3_bucket_policy" "s3_bucket_policy" {
-  bucket = "${aws_s3_bucket.s3.id}"
-  policy = "${data.aws_iam_policy_document.s3_policy.json}"
+  bucket = aws_s3_bucket.s3.id
+  policy = data.aws_iam_policy_document.s3_policy.json
 }
 
 # CloudFront
@@ -81,17 +81,17 @@ resource "aws_cloudfront_distribution" "cf_s3" {
 
   tags = {
     Name      = "${var.service}-cf-s3"
-    Service   = "${var.service}"
-    Env       = "${var.env}"
-    CreatedBy = "${var.created_by}"
+    Service   = var.service
+    Env       = var.env
+    CreatedBy = var.created_by
   }
 
   origin {
-    domain_name = "${aws_s3_bucket.s3.bucket_regional_domain_name}"
+    domain_name = aws_s3_bucket.s3.bucket_regional_domain_name
     origin_id   = "S3-${aws_s3_bucket.s3.bucket}"
 
     s3_origin_config {
-      origin_access_identity = "${aws_cloudfront_origin_access_identity.oai.cloudfront_access_identity_path}"
+      origin_access_identity = aws_cloudfront_origin_access_identity.oai.cloudfront_access_identity_path
     }
   }
 

@@ -10,21 +10,21 @@ terraform {
 
 # Specify the provider and access details
 provider "aws" {
-  region  = "${var.aws_region}"
-  profile = "${var.aws_profile}"
+  region  = var.aws_region
+  profile = var.aws_profile
 }
 
 # Security Group (RDS)
 resource "aws_security_group" "sg_rds" {
   name        = "${var.service}-sg-rds"
   description = "RDS"
-  vpc_id      = "${aws_vpc.vpc.id}"
+  vpc_id      = aws_vpc.vpc.id
 
   tags = {
     Name      = "${var.service}-sg-rds"
-    Service   = "${var.service}"
-    Env       = "${var.env}"
-    CreatedBy = "${var.created_by}"
+    Service   = var.service
+    Env       = var.env
+    CreatedBy = var.created_by
   }
 
   # MySQL access inside VPC
@@ -32,7 +32,7 @@ resource "aws_security_group" "sg_rds" {
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
-    cidr_blocks = ["${aws_vpc.vpc.cidr_block}"]
+    cidr_blocks = [aws_vpc.vpc.cidr_block]
   }
 
   # outbound internet access
@@ -57,16 +57,16 @@ resource "aws_db_subnet_group" "db_sg" {
   description = "DB Subnet group"
 
   subnet_ids = [
-    "${aws_subnet.subnet_private_a.id}",
-    "${aws_subnet.subnet_private_c.id}",
-    "${aws_subnet.subnet_private_d.id}",
+    aws_subnet.subnet_private_a.id,
+    aws_subnet.subnet_private_c.id,
+    aws_subnet.subnet_private_d.id,
   ]
 
   tags = {
     Name      = "${var.service}-sg-db"
-    Service   = "${var.service}"
-    Env       = "${var.env}"
-    CreatedBy = "${var.created_by}"
+    Service   = var.service
+    Env       = var.env
+    CreatedBy = var.created_by
   }
 }
 
@@ -131,9 +131,9 @@ resource "aws_rds_cluster_parameter_group" "db_cluster_pg" {
 
   tags = {
     Name      = "${var.service}-pg-db-cluster"
-    Service   = "${var.service}"
-    Env       = "${var.env}"
-    CreatedBy = "${var.created_by}"
+    Service   = var.service
+    Env       = var.env
+    CreatedBy = var.created_by
   }
 }
 
@@ -145,9 +145,9 @@ resource "aws_rds_cluster" "db_cluster" {
 
   tags = {
     Name      = "${var.service}-db-cluster"
-    Service   = "${var.service}"
-    Env       = "${var.env}"
-    CreatedBy = "${var.created_by}"
+    Service   = var.service
+    Env       = var.env
+    CreatedBy = var.created_by
   }
 
   database_name                   = "db"
@@ -157,9 +157,9 @@ resource "aws_rds_cluster" "db_cluster" {
   preferred_backup_window         = "07:00-09:00"
   final_snapshot_identifier       = "${var.service}-final"
   skip_final_snapshot             = true
-  vpc_security_group_ids          = ["${aws_security_group.sg_rds.id}"]
-  db_subnet_group_name            = "${aws_db_subnet_group.db_sg.name}"
-  db_cluster_parameter_group_name = "${aws_rds_cluster_parameter_group.db_cluster_pg.name}"
+  vpc_security_group_ids          = [aws_security_group.sg_rds.id]
+  db_subnet_group_name            = aws_db_subnet_group.db_sg.name
+  db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.db_cluster_pg.name
 }
 
 resource "aws_db_parameter_group" "db_pg" {
@@ -168,27 +168,27 @@ resource "aws_db_parameter_group" "db_pg" {
 
   tags = {
     Name      = "${var.service}-pg-db"
-    Service   = "${var.service}"
-    Env       = "${var.env}"
-    CreatedBy = "${var.created_by}"
+    Service   = var.service
+    Env       = var.env
+    CreatedBy = var.created_by
   }
 }
 
 resource "aws_rds_cluster_instance" "db" {
   count                   = 1
   identifier              = "${var.service}-db-${count.index}"
-  cluster_identifier      = "${aws_rds_cluster.db_cluster.id}"
+  cluster_identifier      = aws_rds_cluster.db_cluster.id
   engine                  = "aurora-mysql"
   engine_version          = "5.7.12"
   instance_class          = "db.t3.small"
-  db_subnet_group_name    = "${aws_db_subnet_group.db_sg.name}"
-  db_parameter_group_name = "${aws_db_parameter_group.db_pg.name}"
+  db_subnet_group_name    = aws_db_subnet_group.db_sg.name
+  db_parameter_group_name = aws_db_parameter_group.db_pg.name
 
   tags = {
     Name      = "${var.service}-db"
-    Service   = "${var.service}"
-    Env       = "${var.env}"
-    CreatedBy = "${var.created_by}"
+    Service   = var.service
+    Env       = var.env
+    CreatedBy = var.created_by
   }
 }
 
