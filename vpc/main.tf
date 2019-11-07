@@ -19,7 +19,7 @@ resource "aws_vpc" "vpc" {
   cidr_block           = "10.11.0.0/16"
   enable_dns_hostnames = true
 
-  tags {
+  tags = {
     Name      = "${var.service}-vpc"
     Service   = "${var.service}"
     Env       = "${var.env}"
@@ -31,7 +31,7 @@ resource "aws_vpc" "vpc" {
 resource "aws_internet_gateway" "igw" {
   vpc_id = "${aws_vpc.vpc.id}"
 
-  tags {
+  tags = {
     Name      = "${var.service}-igw"
     Service   = "${var.service}"
     Env       = "${var.env}"
@@ -43,7 +43,7 @@ resource "aws_internet_gateway" "igw" {
 resource "aws_default_route_table" "rt_default" {
   default_route_table_id = "${aws_vpc.vpc.main_route_table_id}"
 
-  tags {
+  tags = {
     Name      = "${var.service}-rt-default"
     Service   = "${var.service}"
     Env       = "${var.env}"
@@ -54,7 +54,7 @@ resource "aws_default_route_table" "rt_default" {
 resource "aws_route_table" "rt_public" {
   vpc_id = "${aws_vpc.vpc.id}"
 
-  tags {
+  tags = {
     Name      = "${var.service}-rt-public"
     Service   = "${var.service}"
     Env       = "${var.env}"
@@ -76,7 +76,7 @@ resource "aws_subnet" "subnet_public_a" {
   cidr_block              = "10.11.11.0/24"
   map_public_ip_on_launch = true
 
-  tags {
+  tags = {
     Name      = "${var.service}-subnet-public-a"
     Service   = "${var.service}"
     Env       = "${var.env}"
@@ -95,7 +95,7 @@ resource "aws_subnet" "subnet_public_c" {
   cidr_block              = "10.11.21.0/24"
   map_public_ip_on_launch = true
 
-  tags {
+  tags = {
     Name      = "${var.service}-subnet-public-c"
     Service   = "${var.service}"
     Env       = "${var.env}"
@@ -114,7 +114,7 @@ resource "aws_subnet" "subnet_public_d" {
   cidr_block              = "10.11.31.0/24"
   map_public_ip_on_launch = true
 
-  tags {
+  tags = {
     CreatedBy = "${var.created_by}"
     Name      = "${var.service}-subnet-public-d"
     Service   = "${var.service}"
@@ -133,7 +133,7 @@ resource "aws_subnet" "subnet_private_a" {
   cidr_block              = "10.11.12.0/24"
   map_public_ip_on_launch = true
 
-  tags {
+  tags = {
     Name      = "${var.service}-subnet-private-a"
     Service   = "${var.service}"
     Env       = "${var.env}"
@@ -147,7 +147,7 @@ resource "aws_subnet" "subnet_private_c" {
   cidr_block              = "10.11.22.0/24"
   map_public_ip_on_launch = true
 
-  tags {
+  tags = {
     Name      = "${var.service}-subnet-private-c"
     Service   = "${var.service}"
     Env       = "${var.env}"
@@ -161,7 +161,7 @@ resource "aws_subnet" "subnet_private_d" {
   cidr_block              = "10.11.32.0/24"
   map_public_ip_on_launch = true
 
-  tags {
+  tags = {
     Name      = "${var.service}-subnet-private-d"
     Service   = "${var.service}"
     Env       = "${var.env}"

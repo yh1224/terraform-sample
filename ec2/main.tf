@@ -20,7 +20,7 @@ resource "aws_security_group" "sg_ec2" {
   description = "EC2"
   #vpc_id      = "${aws_vpc.vpc.id}"
 
-  tags {
+  tags = {
     Name      = "${var.service}-ec2"
     Service   = "${var.service}"
     Env       = "${var.env}"
@@ -73,7 +73,7 @@ resource "aws_instance" "ec2" {
   #subnet_id              = "${aws_subnet.subnet_public_a.id}"
   vpc_security_group_ids = ["${aws_security_group.sg_ec2.id}"]
 
-  tags {
+  tags = {
     Name      = "${var.service}-ec2"
     Service   = "${var.service}"
     Env       = "${var.env}"

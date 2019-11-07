@@ -25,7 +25,7 @@ resource "aws_s3_bucket" "s3" {
   bucket = "${var.bucket_name}"
   acl    = "private"
 
-  tags {
+  tags = {
     Name      = "${var.service}-s3"
     Service   = "${var.service}"
     Env       = "${var.env}"
@@ -79,7 +79,7 @@ resource "aws_s3_bucket_policy" "s3_bucket_policy" {
 resource "aws_cloudfront_distribution" "cf_s3" {
   comment = "S3 Distribution"
 
-  tags {
+  tags = {
     Name      = "${var.service}-cf-s3"
     Service   = "${var.service}"
     Env       = "${var.env}"

@@ -20,7 +20,7 @@ resource "aws_security_group" "sg_rds" {
   description = "RDS"
   vpc_id      = "${aws_vpc.vpc.id}"
 
-  tags {
+  tags = {
     Name      = "${var.service}-sg-rds"
     Service   = "${var.service}"
     Env       = "${var.env}"
@@ -62,7 +62,7 @@ resource "aws_db_subnet_group" "db_sg" {
     "${aws_subnet.subnet_private_d.id}",
   ]
 
-  tags {
+  tags = {
     Name      = "${var.service}-sg-db"
     Service   = "${var.service}"
     Env       = "${var.env}"
@@ -74,13 +74,6 @@ resource "aws_db_subnet_group" "db_sg" {
 resource "aws_rds_cluster_parameter_group" "db_cluster_pg" {
   name   = "${var.service}-pg-db-cluster"
   family = "aurora-mysql5.7"
-
-  tags {
-    Name      = "${var.service}-pg-db-cluster"
-    Service   = "${var.service}"
-    Env       = "${var.env}"
-    CreatedBy = "${var.created_by}"
-  }
 
   parameter {
     name         = "character_set_client"
@@ -136,7 +129,7 @@ resource "aws_rds_cluster_parameter_group" "db_cluster_pg" {
     apply_method = "immediate"
   }
 
-  tags {
+  tags = {
     Name      = "${var.service}-pg-db-cluster"
     Service   = "${var.service}"
     Env       = "${var.env}"
@@ -150,7 +143,7 @@ resource "aws_rds_cluster" "db_cluster" {
   engine_version     = "5.7.12"
   availability_zones = ["ap-northeast-1a", "ap-northeast-1c", "ap-northeast-1d"]
 
-  tags {
+  tags = {
     Name      = "${var.service}-db-cluster"
     Service   = "${var.service}"
     Env       = "${var.env}"
@@ -173,7 +166,7 @@ resource "aws_db_parameter_group" "db_pg" {
   name   = "${var.service}-db-pg"
   family = "aurora-mysql5.7"
 
-  tags {
+  tags = {
     Name      = "${var.service}-pg-db"
     Service   = "${var.service}"
     Env       = "${var.env}"
@@ -191,7 +184,7 @@ resource "aws_rds_cluster_instance" "db" {
   db_subnet_group_name    = "${aws_db_subnet_group.db_sg.name}"
   db_parameter_group_name = "${aws_db_parameter_group.db_pg.name}"
 
-  tags {
+  tags = {
     Name      = "${var.service}-db"
     Service   = "${var.service}"
     Env       = "${var.env}"
@@ -210,7 +203,7 @@ resource "aws_rds_cluster_instance" "db" {
 #  db_subnet_group_name   = "${aws_db_subnet_group.db_sg.name}"
 #  vpc_security_group_ids = ["${aws_security_group.sg_rds.id}"]
 #
-#  tags {
+#  tags = {
 #    Name = "${var.service}-db"
 #    Service = "${var.service}"
 #    Env = "${var.env}"
